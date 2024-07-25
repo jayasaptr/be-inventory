@@ -17,7 +17,7 @@ class UserControler extends Controller
     public function index(Request $request)
     {
         // get all user from db with pagination and search by name
-        $pagination = $request->pagination ?? 5;
+        $pagination = $request->pagination ?? 100;
         $search = $request->search ?? '';
 
         $users = User::where('name', 'like', "%$search%")->paginate($pagination);

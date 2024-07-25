@@ -15,7 +15,7 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         // get all category from db with pagination and search by name
-        $pagination = $request->pagination ?? 5;
+        $pagination = $request->pagination ?? 100;
         $search = $request->search ?? '';
 
         $categories = Category::where('name', 'like', "%$search%")->paginate($pagination);

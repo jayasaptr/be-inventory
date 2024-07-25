@@ -14,7 +14,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
 
+
 Route::group(['middleware' => 'auth:api'], function() {
+
     //store user
     Route::post('/user', [\App\Http\Controllers\Api\UserControler::class, 'store']);
 
@@ -59,4 +61,20 @@ Route::group(['middleware' => 'auth:api'], function() {
 
     //delete ruangan
     Route::delete('/ruangan/{id}', [\App\Http\Controllers\Api\RuanganController::class, 'destroy']);
+
+    //store kondisi
+    Route::post('/kondisi', [\App\Http\Controllers\Api\KondisiController::class, 'store']);
+
+    //show kondisi
+    Route::get('/kondisi', [\App\Http\Controllers\Api\KondisiController::class, 'index']);
+
+    //show kondisi by id
+    Route::get('/kondisi/{id}', [\App\Http\Controllers\Api\KondisiController::class, 'show']);
+
+    //update kondisi
+    Route::post('/kondisi/{id}', [\App\Http\Controllers\Api\KondisiController::class, 'update']);
+
+    //delete kondisi
+    Route::delete('/kondisi/{id}', [\App\Http\Controllers\Api\KondisiController::class, 'destroy']);
+
 });

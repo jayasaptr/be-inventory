@@ -3,27 +3,27 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Ruangan;
+use App\Models\Kondisi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class RuanganController extends Controller
+class KondisiController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        // Get all data from ruangan table with paginate and search 
+        // Get all data from kondisi table with paginate and search
         $paginate = $request->input('paginate') ?? 100;
         $search = $request->search ?? '';
 
-        $ruangan = Ruangan::where('nama', 'like', "%$search%")->with('idUser')->paginate($paginate);
+        $kondisi = Kondisi::where('nama', 'like', "%$search%")->paginate($paginate);
 
         return response()->json([
             'success' => true,
-            'message' => 'List Ruangan',
-            'data' => $ruangan
+            'message' => 'List Kondisi',
+            'data' => $kondisi
         ], 200);
     }
 
@@ -40,10 +40,9 @@ class RuanganController extends Controller
      */
     public function store(Request $request)
     {
-        // Set validation
+        //  Set validation
         $validator = Validator::make($request->all(), [
             'nama' => 'required|string',
-            'id_user' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
@@ -54,15 +53,14 @@ class RuanganController extends Controller
         }
 
         // Store to db
-        $ruangan = Ruangan::create([
+        $kondisi = Kondisi::create([
             'nama' => $request->nama,
-            'id_user' => $request->id_user,
         ]);
 
         return response()->json([
             'success' => true,
-            'message' => 'Ruangan created',
-            'data' => $ruangan
+            'message' => 'Kondisi Created',
+            'data' => $kondisi
         ], 201);
     }
 
@@ -71,20 +69,20 @@ class RuanganController extends Controller
      */
     public function show(string $id)
     {
-        // Get ruangan by id
-        $ruangan = Ruangan::find($id)->with('idUser')->first();
+        // Find kondisi by id
+        $kondisi = Kondisi::find($id);
 
-        if (!$ruangan) {
+        if (!$kondisi) {
             return response()->json([
                 'success' => false,
-                'message' => 'Ruangan not found'
+                'message' => 'Kondisi not found'
             ], 404);
         }
 
         return response()->json([
             'success' => true,
-            'message' => 'Ruangan found',
-            'data' => $ruangan
+            'message' => 'Kondisi found',
+            'data' => $kondisi
         ], 200);
     }
 
@@ -93,7 +91,7 @@ class RuanganController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        // 
     }
 
     /**
@@ -101,28 +99,26 @@ class RuanganController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        // find ruangan by id
-        $ruangan = Ruangan::find($id);
+        // Update kondisi
 
-        if (!$ruangan) {
+        $kondisi = Kondisi::find($id);
+
+        if (!$kondisi) {
             return response()->json([
                 'success' => false,
-                'message' => 'Ruangan not found'
+                'message' => 'Kondisi not found'
             ], 404);
         }
 
-        // update ruangan
-        $ruangan->update([
-            'nama' => $request->nama ?? $ruangan->nama,
-            'id_user' => $request->id_user ?? $ruangan->id_user,
-        ]);
+        $kondisi->nama = $request->nama;
+
+        $kondisi->save();
 
         return response()->json([
             'success' => true,
-            'message' => 'Ruangan updated',
-            'data' => $ruangan
+            'message' => 'Kondisi updated',
+            'data' => $kondisi
         ], 200);
-
     }
 
     /**
@@ -130,23 +126,22 @@ class RuanganController extends Controller
      */
     public function destroy(string $id)
     {
-        // find ruangan by id
-        $ruangan = Ruangan::find($id);
+        // Find kondisi by id
 
-        if (!$ruangan) {
+        $kondisi = Kondisi::find($id);
+
+        if (!$kondisi) {
             return response()->json([
                 'success' => false,
-                'message' => 'Ruangan not found'
+                'message' => 'Kondisi not found'
             ], 404);
         }
 
-        // delete ruangan
-        $ruangan->delete();
+        $kondisi->delete();
 
         return response()->json([
             'success' => true,
-            'message' => 'Ruangan deleted',
-            'data' => $ruangan
+            'message' => 'Kondisi deleted'
         ], 200);
     }
 }
