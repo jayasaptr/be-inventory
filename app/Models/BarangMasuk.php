@@ -16,7 +16,7 @@ class BarangMasuk extends Model
         'tanggal_masuk',
     ];
 
-    public function iBarang()
+    public function idBarang()
     {
         return $this->belongsTo(Barang::class, 'id_barang', 'id');
     }

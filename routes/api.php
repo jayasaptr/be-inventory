@@ -91,4 +91,24 @@ Route::group(['middleware' => 'auth:api'], function() {
 
     // delete barang
     Route::delete('/barang/{id}', [\App\Http\Controllers\Api\BarangController::class, 'destroy']);
+
+    // store barang masuk
+
+    Route::post('/barang-masuk', [\App\Http\Controllers\Api\BarangMasukController::class, 'store']);
+
+    // show barang masuk
+
+    Route::get('/barang-masuk', [\App\Http\Controllers\Api\BarangMasukController::class, 'index']);
+
+    // show barang masuk by id
+
+    Route::get('/barang-masuk/{id}', [\App\Http\Controllers\Api\BarangMasukController::class, 'show']);
+
+    // update barang masuk
+
+    Route::post('/barang-masuk/{id}', [\App\Http\Controllers\Api\BarangMasukController::class, 'update']);
+
+    // delete barang masuk
+
+    Route::delete('/barang-masuk/{id}', [\App\Http\Controllers\Api\BarangMasukController::class, 'destroy']);
 });
