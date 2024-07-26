@@ -77,4 +77,18 @@ Route::group(['middleware' => 'auth:api'], function() {
     //delete kondisi
     Route::delete('/kondisi/{id}', [\App\Http\Controllers\Api\KondisiController::class, 'destroy']);
 
+    // store barang
+    Route::post('/barang', [\App\Http\Controllers\Api\BarangController::class, 'store']);
+
+    // show barang
+    Route::get('/barang', [\App\Http\Controllers\Api\BarangController::class, 'index']);
+
+    // show barang by id
+    Route::get('/barang/{id}', [\App\Http\Controllers\Api\BarangController::class, 'show']);
+
+    // update barang
+    Route::post('/barang/{id}', [\App\Http\Controllers\Api\BarangController::class, 'update']);
+
+    // delete barang
+    Route::delete('/barang/{id}', [\App\Http\Controllers\Api\BarangController::class, 'destroy']);
 });

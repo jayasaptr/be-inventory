@@ -17,7 +17,7 @@ class BarangController extends Controller
         // Mengambil data barang dari database dengan pagination dan search query
         $barangs = Barang::when($request->search, function($query) use ($request) {
             $query->where('nama_barang', 'like', "%{$request->search}%");
-        })->paginate(100);
+        })->with('idCategory')->paginate(100);
 
         // Mengembalikan data barang dalam bentuk json
         return response()->json([
