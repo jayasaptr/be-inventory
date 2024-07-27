@@ -13,17 +13,18 @@ return new class extends Migration
     {
         Schema::create('perbaikans', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_barang');
+            $table->unsignedBigInteger('id_barang_masuk');
             $table->date('tanggal_perbaikan');
             $table->date('tanggal_selesai');
             $table->string('biaya');
             $table->text('keterangan');
             $table->enum('status', ['proses', 'disetuji']);
             $table->string('kwitansi');
+            $table->integer('jumlah');
             $table->unsignedBigInteger('id_user');
             $table->timestamps();
 
-            $table->foreign('id_barang')->references('id')->on('barangs');
+            $table->foreign('id_barang_masuk')->references('id')->on('barang_masuks');
 
             $table->foreign('id_user')->references('id')->on('users');
         });

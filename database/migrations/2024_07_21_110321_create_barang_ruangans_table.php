@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('barang_ruangans', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_barang');
+            $table->unsignedBigInteger('id_barang_masuk');
             $table->unsignedBigInteger('id_ruangan');
             $table->integer('jumlah');
             $table->string('keterangan');
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->enum('status', ['diproses', 'disetuji']);
             $table->timestamps();
 
-            $table->foreign('id_barang')->references('id')->on('barangs');
+            $table->foreign('id_barang_masuk')->references('id')->on('barang_masuks');
             $table->foreign('id_ruangan')->references('id')->on('ruangans');
             $table->foreign('id_user')->references('id')->on('users');
         });

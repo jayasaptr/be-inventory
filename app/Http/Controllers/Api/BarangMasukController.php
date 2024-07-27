@@ -14,18 +14,21 @@ class BarangMasukController extends Controller
      */
     public function index(Request $request)
     {
-        $barangs = BarangMasuk::when($request->search, function($query) use ($request) {
-            $query->whereHas('idBarang', function($query) use ($request) {
-                $query->where('nama', 'like', "%{$request->search}%");
-            });
-            // with idBarang dan idKondisi
-        })->with('idBarang', 'idKondisi:id,nama')->paginate(100);
+        // Mengambil data barang masuk dengan relasi kondisi dan pagination
 
-        // Mengembalikan data barang dalam bentuk json
+        $pagination = $request->pagination ?? 100;
+        $search = $request->search ?? '';
+
+        $barangMasuk = BarangMasuk::with('idKondisi', 'idCategory')
+            ->where('nama', 'like', "%$search%")
+            ->paginate($pagination);
+        
+        // Mengembalikan response sukses
+
         return response()->json([
             'success' => true,
             'message' => 'List barang masuk',
-            'data' => $barangs
+            'data' => $barangMasuk
         ], 200);
     }
 
@@ -45,9 +48,14 @@ class BarangMasukController extends Controller
         // Validasi data yang diterima
 
         $validation = Validator::make($request->all(), [
-            'id_barang' => 'required',
-            'id_kondisi' => 'required',
+            'nama' => 'required',
+            'merk' => 'required',
+            'id_category' => 'required',
             'jumlah' => 'required',
+            'satuan' => 'required',
+            'harga' => 'required',
+            'keterangan' => 'required',
+            'id_kondisi' => 'required',
             'tanggal_masuk' => 'required',
         ]);
 
@@ -63,9 +71,14 @@ class BarangMasukController extends Controller
         // Membuat data barang masuk baru
 
         $barangMasuk = BarangMasuk::create([
-            'id_barang' => $request->id_barang,
-            'id_kondisi' => $request->id_kondisi,
+            'nama' => $request->nama,
+            'merk' => $request->merk,
+            'id_category' => $request->id_category,
             'jumlah' => $request->jumlah,
+            'satuan' => $request->satuan,
+            'harga' => $request->harga,
+            'keterangan' => $request->keterangan,
+            'id_kondisi' => $request->id_kondisi,
             'tanggal_masuk' => $request->tanggal_masuk,
         ]);
 
@@ -85,7 +98,7 @@ class BarangMasukController extends Controller
     {
         // Mencari data barang masuk berdasarkan id
 
-        $barangMasuk = BarangMasuk::with('idBarang', 'idKondisi')->find($id);
+        $barangMasuk = BarangMasuk::with('idKondisi')->find($id);
 
         // Jika data barang masuk tidak ditemukan
 
@@ -134,9 +147,14 @@ class BarangMasukController extends Controller
         // Mengupdate data barang masuk
 
         $barangMasuk->update([
-            'id_barang' => $request->id_barang ?? $barangMasuk->id_barang,
-            'id_kondisi' => $request->id_kondisi ?? $barangMasuk->id_kondisi,
+            'nama' => $request->nama ?? $barangMasuk->nama,
+            'merk' => $request->merk ?? $barangMasuk->merk,
+            'id_category' => $request->id_category ?? $barangMasuk->id_category,
             'jumlah' => $request->jumlah ?? $barangMasuk->jumlah,
+            'satuan' => $request->satuan ?? $barangMasuk->satuan,
+            'harga' => $request->harga ?? $barangMasuk->harga,
+            'keterangan' => $request->keterangan ?? $barangMasuk->keterangan,
+            'id_kondisi' => $request->id_kondisi ?? $barangMasuk->id_kondisi,
             'tanggal_masuk' => $request->tanggal_masuk ?? $barangMasuk->tanggal_masuk,
         ]);
 

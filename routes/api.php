@@ -111,4 +111,24 @@ Route::group(['middleware' => 'auth:api'], function() {
     // delete barang masuk
 
     Route::delete('/barang-masuk/{id}', [\App\Http\Controllers\Api\BarangMasukController::class, 'destroy']);
+
+    // store barang keluar
+
+    Route::post('/barang-keluar', [\App\Http\Controllers\Api\BarangKeluarController::class, 'store']);
+
+    // show barang keluar
+
+    Route::get('/barang-keluar', [\App\Http\Controllers\Api\BarangKeluarController::class, 'index']);
+
+    // show barang keluar by id
+
+    Route::get('/barang-keluar/{id}', [\App\Http\Controllers\Api\BarangKeluarController::class, 'show']);
+
+    // update barang keluar
+
+    Route::post('/barang-keluar/{id}', [\App\Http\Controllers\Api\BarangKeluarController::class, 'update']);
+
+    // delete barang keluar
+
+    Route::delete('/barang-keluar/{id}', [\App\Http\Controllers\Api\BarangKeluarController::class, 'destroy']);
 });

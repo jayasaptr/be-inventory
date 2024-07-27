@@ -10,15 +10,20 @@ class BarangMasuk extends Model
     use HasFactory;
 
     protected $fillable = [
-        'id_barang',
-        'id_kondisi',
+        'nama',
+        'merk',
+        'id_category',
         'jumlah',
+        'satuan',
+        'harga',
+        'keterangan',
+        'id_kondisi',
         'tanggal_masuk',
     ];
 
-    public function idBarang()
+    public function idCategory()
     {
-        return $this->belongsTo(Barang::class, 'id_barang', 'id');
+        return $this->belongsTo(Category::class, 'id_category', 'id');
     }
 
     public function idKondisi()

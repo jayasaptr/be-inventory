@@ -23,6 +23,11 @@ class BarangKeluar extends Model
         return $this->belongsTo(Barang::class, 'id_barang', 'id');
     }
 
+    public function idBarangMasuk()
+    {
+        return $this->belongsTo(BarangMasuk::class, 'id_barang_masuk', 'id');
+    }
+
     public function idKondisi()
     {
         return $this->belongsTo(Kondisi::class, 'id_kondisi', 'id');
