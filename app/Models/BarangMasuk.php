@@ -19,6 +19,7 @@ class BarangMasuk extends Model
         'keterangan',
         'id_kondisi',
         'tanggal_masuk',
+        'stock'
     ];
 
     public function idCategory()

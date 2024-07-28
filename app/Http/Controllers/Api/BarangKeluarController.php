@@ -15,22 +15,25 @@ class BarangKeluarController extends Controller
      */
     public function index(Request $request)
     {
-        $barangs = BarangKeluar::when($request->search, function($query) use ($request) {
-            $query->whereHas('idBarang', function($query) use ($request) {
-                $query->where('nama', 'like', "%{$request->search}%");
-            });
-        })->with('idBarangMasuk', 'idKondisi:id,nama')->paginate(100);
+        // Mengambil data barang keluar dengan relasi barang masuk dan kondisi dan tampilkan nama category dari barang masuk
+        $pagination = $request->pagination ?? 100;  
+        $search = $request->search ?? '';
 
-        // get nama from idBarangMasuk
-        foreach ($barangs as $barang) {
-            $barang->nama_barang = $barang->idBarangMasuk->idBarang->nama;
-        }
+        $barang_keluar = BarangKeluar::with(['idBarangMasuk' => function($query) {
+            $query->select('id', 'nama', 'merk', 'id_category', 'jumlah', 'satuan', 'harga', 'keterangan', 'id_kondisi', 'tanggal_masuk')
+                  ->with('idCategory');
+        }, 'idKondisi'])
+        ->whereHas('idBarangMasuk', function($query) use ($search) {
+            $query->where('nama', 'like', "%$search%");
+        })->paginate($pagination);
 
-        // Mengembalikan data barang dalam bentuk json
+    
+        // Mengembalikan response sukses
+
         return response()->json([
             'success' => true,
             'message' => 'List barang keluar',
-            'data' => $barangs
+            'data' => $barang_keluar
         ], 200);
     }
 
@@ -80,7 +83,7 @@ class BarangKeluarController extends Controller
 
         // ketika berhasil membuat data barang keluar kurangi jumlah barang di barang masuk
         $barangMasuk = BarangMasuk::find($request->id_barang_masuk);
-        $barangMasuk->jumlah = $barangMasuk->jumlah - $request->jumlah;
+        $barangMasuk->stock = $barangMasuk->jumlah - $request->jumlah;
         $barangMasuk->save();
 
         // Mengembalikan response sukses
@@ -99,10 +102,7 @@ class BarangKeluarController extends Controller
     {
         // Cari data barang keluar berdasarkan id
 
-        $barang = BarangKeluar::with('idBarang', 'idKondisi:id,nama')->find($id);
-
-        // get nama from idBarangMasuk
-        $barang->nama_barang = $barang->idBarangMasuk->idBarang->nama;
+        $barang = BarangKeluar::with('idBarangMasuk:id,nama,merk,id_category,jumlah,satuan,harga,keterangan,id_kondisi,tanggal_masuk', 'idKondisi')->find($id);
 
         // Jika barang keluar tidak ditemukan
 
@@ -114,7 +114,7 @@ class BarangKeluarController extends Controller
             ], 404);
         }
 
-        // Mengembalikan data barang keluar dalam bentuk json
+        // Mengembalikan response sukses
 
         return response()->json([
             'success' => true,
@@ -128,7 +128,7 @@ class BarangKeluarController extends Controller
      */
     public function edit(string $id)
     {
-        // 
+        //  
     }
 
     /**
@@ -218,7 +218,7 @@ class BarangKeluarController extends Controller
 
         // ketika berhasil menghapus data barang keluar tambahkan jumlah barang di barang masuk
         $barangMasuk = BarangMasuk::find($barang->id_barang_masuk);
-        $barangMasuk->jumlah = $barangMasuk->jumlah + $barang->jumlah;
+        $barangMasuk->stock = $barangMasuk->stock + $barang->jumlah;
         $barangMasuk->save();
 
         // Mengembalikan response sukses
