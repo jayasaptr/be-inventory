@@ -10,19 +10,21 @@ class Perbaikan extends Model
     use HasFactory;
 
     protected $fillable = [
-        'id_barang',
+        'id_barang_masuk',
         'tanggal_perbaikan',
         'tanggal_selesai',
         'biaya',
         'keterangan',
         'status',
         'kwitansi',
+        'jumlah',
         'id_user',
     ];
 
-    public function idBarang()
+    // barang masuk
+    public function idBarangMasuk()
     {
-        return $this->belongsTo(Barang::class, 'id_barang', 'id');
+        return $this->belongsTo(BarangMasuk::class, 'id_barang_masuk', 'id');
     }
 
     public function idUser()
