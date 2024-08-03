@@ -10,7 +10,7 @@ class BarangRuangan extends Model
     use HasFactory;
 
     protected $fillable = [
-        'id_barang',
+        'id_barang_masuk',
         'id_ruangan',
         'jumlah',
         'keterangan',
@@ -19,9 +19,9 @@ class BarangRuangan extends Model
         'status',
     ];
 
-    public function idBarang()
+    public function idBarangMasuk()
     {
-        return $this->belongsTo(Barang::class, 'id_barang', 'id');
+        return $this->belongsTo(BarangMasuk::class, 'id_barang_masuk', 'id');
     }
 
     public function idRuang()
@@ -32,5 +32,10 @@ class BarangRuangan extends Model
     public function idUser()
     {
         return $this->belongsTo(User::class, 'id_user', 'id');
+    }
+
+    public function idRuangan()
+    {
+        return $this->belongsTo(Ruangan::class, 'id_ruangan', 'id');
     }
 }

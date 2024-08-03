@@ -151,4 +151,27 @@ Route::group(['middleware' => 'auth:api'], function() {
     // delete perbaikan
 
     Route::delete('/perbaikan/{id}', [\App\Http\Controllers\Api\PerbaikanController::class, 'destroy']);
+
+    // store barang ruangan
+
+    Route::post('/barang-ruangan', [\App\Http\Controllers\Api\BarangRuanganController::class, 'store']);
+
+    // show barang ruangan
+
+    Route::get('/barang-ruangan', [\App\Http\Controllers\Api\BarangRuanganController::class, 'index']);
+
+    // show barang ruangan by id
+
+    Route::get('/barang-ruangan/{id}', [\App\Http\Controllers\Api\BarangRuanganController::class, 'show']);
+
+    // update barang ruangan
+
+    Route::post('/barang-ruangan/{id}', [\App\Http\Controllers\Api\BarangRuanganController::class, 'update']);
+
+    // delete barang ruangan
+
+    Route::delete('/barang-ruangan/{id}', [\App\Http\Controllers\Api\BarangRuanganController::class, 'destroy']);
+
+    // get ruangan by user id
+    Route::get('/ruangan-user', [\App\Http\Controllers\Api\RuanganController::class, 'getRuanganByUser']);
 });

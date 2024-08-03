@@ -149,4 +149,18 @@ class RuanganController extends Controller
             'data' => $ruangan
         ], 200);
     }
+
+    // get ruangan by user id
+    public function getRuanganByUser(Request $request)
+    {
+        $id_user = $request->id_user;
+
+        $ruangan = Ruangan::where('id_user', $id_user)->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'List Ruangan by User',
+            'data' => $ruangan
+        ], 200);
+    }
 }
