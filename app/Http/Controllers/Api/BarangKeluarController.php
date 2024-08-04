@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\BarangKeluar;
 use App\Models\BarangMasuk;
+use App\Models\BarangRuangan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -81,10 +82,19 @@ class BarangKeluarController extends Controller
             'id_kondisi' => $request->id_kondisi,
         ]);
 
-        // ketika berhasil membuat data barang keluar kurangi jumlah barang di barang masuk
-        $barangMasuk = BarangMasuk::find($request->id_barang_masuk);
-        $barangMasuk->stock = $barangMasuk->jumlah - $request->jumlah;
-        $barangMasuk->save();
+        // jika terdapat id_barang_ruang maka kurangi stock barang di barang permintaan sesuai id_barang_ruang
+        if ($request->id_barang_ruang) {
+            $barangRuang = BarangRuangan::find($request->id_barang_ruang);
+            $barangRuang->jumlah = $barangRuang->jumlah - $request->jumlah;
+            $barangRuang->save();
+        }else {
+            // kurangi stock barang di barang masuk sesuai id_barang_masuk
+            $barangMasuk = BarangMasuk::find($request->id_barang_masuk);
+            $barangMasuk->stock = $barangMasuk->stock - $request->jumlah;
+            $barangMasuk->save();
+        }
+
+      
 
         // Mengembalikan response sukses
 
