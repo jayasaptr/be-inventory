@@ -71,6 +71,18 @@ class BarangKeluarController extends Controller
             ], 422);
         }
 
+        // cek stock di barang ruangan jika stock di barang ruangan tidak mencukupi maka kirim response error
+
+        if ($request->id_barang_ruang) {
+            $barangRuang = BarangRuangan::find($request->id_barang_ruang);
+            if ($barangRuang->jumlah < $request->jumlah) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Stock barang di ruangan tidak mencukupi'
+                ], 422);
+            }
+        }
+
         // Buat data barang masuk baru
 
         $barang = BarangKeluar::create([

@@ -18,7 +18,9 @@ class BarangRuanganController extends Controller
         //  get all barang ruangan from db with pagination and search by id user jika tidak ada search query tampilkan semua
         $pagination = $request->pagination ?? 100;
         $barangRuangan = BarangRuangan::when($request->search, function($query) use ($request) {
-            $query->where('id_user', $request->search);
+            $query->whereHas('idRuangan', function($query) use ($request) {
+                $query->where('id_user', $request->search);
+            });
         })->with('idBarangMasuk', 'idRuang', 'idUser:id,name', 'idRuangan')->paginate($pagination);
 
         return response()->json([

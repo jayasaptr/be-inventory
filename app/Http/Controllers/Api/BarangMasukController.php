@@ -198,4 +198,134 @@ class BarangMasukController extends Controller
             'message' => 'Barang masuk berhasil dihapus',
         ], 200);
     }
+
+    public function reportBarangMasuk(Request $request)
+    {
+        $pagination = $request->pagination ?? 100;
+        $search = $request->search ?? '';
+        $date = $request->date ?? '';
+        $print = $request->print ?? false;
+        $idKondisi = $request->id_kondisi ?? '';
+
+        $query = BarangMasuk::query()->with('idCategory', 'idKondisi');
+
+        if ($search) {
+            $query->where('nama_barang', 'like', '%' . $search . '%')
+                  ->orWhere('merk', 'like', '%' . $search . '%');
+        }
+
+        if ($date) {
+            $query->whereDate('tanggal_masuk', $date);
+        }
+
+        if ($idKondisi) {
+            $query->where('id_kondisi', $idKondisi);
+        }
+
+        $barangMasuk = $query->paginate($pagination);
+
+        if ($print) {
+            // Logic for generating the report to PDF with a nice letterhead
+            $filename = 'report_barang_masuk.pdf';
+            $pdf = new \TCPDF();
+
+            // Set document information
+            $pdf->SetCreator('My Application');
+            $pdf->SetAuthor('My Application');
+            $pdf->SetTitle('Report Barang Masuk');
+            $pdf->SetSubject('Report Barang Masuk');
+            $pdf->SetKeywords('TCPDF, PDF, report, barang masuk');
+
+            // Set default header data
+            $pdf->SetHeaderData('', 0, '', '', array(255,255,255), array(255,255,255));
+
+            // Set header and footer fonts
+            $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+            $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+            // Set default monospaced font
+            $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+            // Set margins
+            $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+            $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+            $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+            // Set auto page breaks
+            $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+            // Set image scale factor
+            $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+            // Add a page
+            $pdf->AddPage();
+
+            // Set font
+            $pdf->SetFont('helvetica', '', 12);
+
+            // Set the header
+            $html = '<h3>Laporan Barang Masuk</h3>';
+            $html .= '<table border="1" cellpadding="4">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nama Barang</th>
+                                <th>Merk</th>
+                                <th>Kategori</th>
+                                <th>Kondisi</th>
+                                <th>Jumlah</th>
+                                <th>Total Harga</th>
+                                <th>Tanggal Masuk</th>
+                            </tr>
+                        </thead>
+                        <tbody>';
+
+            // Fill data
+            foreach ($barangMasuk as $item) {
+                $html .= '<tr>
+                            <td>' . $item->id . '</td>
+                            <td>' . $item->nama . '</td>
+                            <td>' . $item->merk . '</td>
+                            <td>' . $item->idCategory->name . '</td>
+                            <td>' . $item->idKondisi->nama . '</td>
+                            <td>' . $item->jumlah . '</td>
+                            <td>' . $item->harga * $item->jumlah . '</td>
+                            <td>' . $item->tanggal_masuk . '</td>
+                          </tr>';
+            }
+
+            $html .= '</tbody></table>';
+
+            // Print text using writeHTMLCell()
+            $pdf->writeHTML($html, true, false, true, false, '');
+
+            // Add signature at the bottom of the page
+            $pdf->SetY(-80); // Position at 50 mm from bottom
+            $signatureHtml = '<table border="0" cellpadding="4">
+                                <tr>
+                                    <td></td>
+                                    <td style="text-align: center;">
+                                        Kepala Sekolah<br><br><br><br>
+                                        <u>Nama Kepala Sekolah</u><br>
+                                        NIP. 123456789
+                                    </td>
+                                </tr>
+                              </table>';
+            $pdf->writeHTML($signatureHtml, true, false, true, false, '');
+
+            // Close and output PDF document
+            $pdf->Output(public_path($filename), 'F');
+
+            // Return the URL as a response
+            return response()->json([
+                'success' => true,
+                'url' => url($filename)
+            ], 200);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $barangMasuk
+        ], 200);
+    }
 }

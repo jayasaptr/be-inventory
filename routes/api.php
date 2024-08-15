@@ -174,4 +174,7 @@ Route::group(['middleware' => 'auth:api'], function() {
 
     // get ruangan by user id
     Route::get('/ruangan-user', [\App\Http\Controllers\Api\RuanganController::class, 'getRuanganByUser']);
+
+    // report barang masuk
+    Route::get('/report-barang-masuk', [\App\Http\Controllers\Api\BarangMasukController::class, 'reportBarangMasuk']);
 });

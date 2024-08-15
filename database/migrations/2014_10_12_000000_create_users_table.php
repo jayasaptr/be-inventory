@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('no_telp');
             $table->text('alamat');
             $table->string('foto');
-            $table->enum('role', ['admin', 'guru']);
+            $table->enum('role', ['admin', 'staf', 'kabag']);
             $table->rememberToken();
             $table->timestamps();
         });
