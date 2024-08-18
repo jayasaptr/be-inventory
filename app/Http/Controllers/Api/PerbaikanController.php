@@ -187,4 +187,43 @@ class PerbaikanController extends Controller
             'message' => 'Perbaikan deleted',
         ], 200);
     }
+
+    public function reportPengajuanPerbaikan(Request $request)
+    {
+        $pagination = $request->pagination ?? 100;
+        $search = $request->search ?? '';
+        $startDate = $request->start_date ?? '';
+        $endDate = $request->end_date ?? '';
+        $status = $request->status ?? '';
+
+        $query = Perbaikan::query()->with(['idBarangMasuk' => function($query) {
+            $query->select('id', 'nama', 'merk', 'id_category', 'jumlah', 'satuan', 'harga', 'keterangan', 'id_kondisi', 'tanggal_masuk')
+                  ->with('idCategory', 'idKondisi');
+        }, 'idUser:id,name']);
+
+        if ($search) {
+            $query->whereHas('idUser', function($query) use ($search) {
+                $query->where('name', 'like', '%' . $search . '%');
+            });
+        }
+
+        if ($startDate && $endDate) {
+            $query->whereBetween('tanggal_perbaikan', [$startDate, $endDate]);
+        } elseif ($startDate) {
+            $query->whereDate('tanggal_perbaikan', '>=', $startDate);
+        } elseif ($endDate) {
+            $query->whereDate('tanggal_perbaikan', '<=', $endDate);
+        }
+
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+        $perbaikan = $query->paginate($pagination);
+
+        return response()->json([
+            'success' => true,
+            'data' => $perbaikan
+        ], 200);
+    }
 }

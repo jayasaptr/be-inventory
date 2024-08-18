@@ -83,15 +83,6 @@ Route::group(['middleware' => 'auth:api'], function() {
     // show barang
     Route::get('/barang', [\App\Http\Controllers\Api\BarangController::class, 'index']);
 
-    // show barang by id
-    Route::get('/barang/{id}', [\App\Http\Controllers\Api\BarangController::class, 'show']);
-
-    // update barang
-    Route::post('/barang/{id}', [\App\Http\Controllers\Api\BarangController::class, 'update']);
-
-    // delete barang
-    Route::delete('/barang/{id}', [\App\Http\Controllers\Api\BarangController::class, 'destroy']);
-
     // store barang masuk
 
     Route::post('/barang-masuk', [\App\Http\Controllers\Api\BarangMasukController::class, 'store']);
@@ -177,4 +168,73 @@ Route::group(['middleware' => 'auth:api'], function() {
 
     // report barang masuk
     Route::get('/report-barang-masuk', [\App\Http\Controllers\Api\BarangMasukController::class, 'reportBarangMasuk']);
+
+    // report barang keluar
+    Route::get('/report-barang-keluar', [\App\Http\Controllers\Api\BarangKeluarController::class, 'reportBarangKeluar']);
+
+    // report perbaikan
+    Route::get('/report-perbaikan', [\App\Http\Controllers\Api\PerbaikanController::class, 'reportPengajuanPerbaikan']);
+
+    // report barang ruangan
+    Route::get('/report-barang-ruangan', [\App\Http\Controllers\Api\BarangRuanganController::class, 'reportBarangRuangan']);        
+
+    // getsurat aktif
+    Route::get('/surat-aktif', [\App\Http\Controllers\Api\SuratAktif::class, 'index']);
+
+    // store surat aktif
+    Route::post('/surat-aktif', [\App\Http\Controllers\Api\SuratAktif::class, 'store']);
+
+    // show surat aktif by id
+    Route::get('/surat-aktif/{id}', [\App\Http\Controllers\Api\SuratAktif::class, 'show']);
+
+    // update surat aktif
+    Route::post('/surat-aktif/{id}', [\App\Http\Controllers\Api\SuratAktif::class, 'update']);
+
+    // delete surat aktif
+    Route::delete('/surat-aktif/{id}', [\App\Http\Controllers\Api\SuratAktif::class, 'destroy']);
+
+    // get surat tugas
+    Route::get('/surat-tugas', [\App\Http\Controllers\Api\SuratTugasController::class, 'index']);
+
+    // store surat tugas
+    Route::post('/surat-tugas', [\App\Http\Controllers\Api\SuratTugasController::class, 'store']);
+
+    // show surat tugas by id
+    Route::get('/surat-tugas/{id}', [\App\Http\Controllers\Api\SuratTugasController::class, 'show']);
+
+    // update surat tugas
+    Route::post('/surat-tugas/{id}', [\App\Http\Controllers\Api\SuratTugasController::class, 'update']);
+
+    // delete surat tugas
+    Route::delete('/surat-tugas/{id}', [\App\Http\Controllers\Api\SuratTugasController::class, 'destroy']);
+
+    // get surat baik
+    Route::get('/surat-baik', [\App\Http\Controllers\Api\SuratBaikController::class, 'index']);
+
+    // store surat baik
+    Route::post('/surat-baik', [\App\Http\Controllers\Api\SuratBaikController::class, 'store']);
+
+    // show surat baik by id
+    Route::get('/surat-baik/{id}', [\App\Http\Controllers\Api\SuratBaikController::class, 'show']);
+
+    // update surat baik
+    Route::post('/surat-baik/{id}', [\App\Http\Controllers\Api\SuratBaikController::class, 'update']);
+
+    // delete surat baik
+    Route::delete('/surat-baik/{id}', [\App\Http\Controllers\Api\SuratBaikController::class, 'destroy']);
+
+    // get surat 
+    Route::get('/surat', [\App\Http\Controllers\Api\SuratController::class, 'index']);
+
+    // store surat
+    Route::post('/surat', [\App\Http\Controllers\Api\SuratController::class, 'store']);
+
+    // show surat by id
+    Route::get('/surat/{id}', [\App\Http\Controllers\Api\SuratController::class, 'show']);
+
+    // update surat
+    Route::post('/surat/{id}', [\App\Http\Controllers\Api\SuratController::class, 'update']);
+
+    // delete surat
+    Route::delete('/surat/{id}', [\App\Http\Controllers\Api\SuratController::class, 'destroy']);
 });

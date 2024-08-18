@@ -251,4 +251,44 @@ class BarangKeluarController extends Controller
             'data' => $barang
         ], 200);
     }
+
+    public function reportBarangKeluar(Request $request)
+    {
+        $pagination = $request->pagination ?? 100;
+        $search = $request->search ?? '';
+        $startDate = $request->start_date ?? '';
+        $endDate = $request->end_date ?? '';
+        $idKondisi = $request->id_kondisi ?? '';
+
+        $query = BarangKeluar::query()->with(['idBarangMasuk' => function($query) {
+            $query->select('id', 'nama', 'merk', 'id_category', 'jumlah', 'satuan', 'harga', 'keterangan', 'id_kondisi', 'tanggal_masuk')
+                  ->with('idCategory', 'idKondisi');
+        }, 'idKondisi']);
+
+        if ($search) {
+            $query->whereHas('idBarangMasuk', function($query) use ($search) {
+                $query->where('nama', 'like', '%' . $search . '%')
+                      ->orWhere('merk', 'like', '%' . $search . '%');
+            });
+        }
+
+        if ($startDate && $endDate) {
+            $query->whereBetween('tanggal_keluar', [$startDate, $endDate]);
+        } elseif ($startDate) {
+            $query->whereDate('tanggal_keluar', '>=', $startDate);
+        } elseif ($endDate) {
+            $query->whereDate('tanggal_keluar', '<=', $endDate);
+        }
+
+        if ($idKondisi) {
+            $query->where('id_kondisi', $idKondisi);
+        }
+
+        $barangKeluar = $query->paginate($pagination);
+
+        return response()->json([
+            'success' => true,
+            'data' => $barangKeluar
+        ], 200);
+    }
 }

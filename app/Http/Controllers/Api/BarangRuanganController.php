@@ -185,4 +185,43 @@ class BarangRuanganController extends Controller
             'message' => 'Barang ruangan deleted',
         ], 200);
     }
+
+    public function reportBarangRuangan(Request $request)
+    {
+        $pagination = $request->pagination ?? 100;
+        $search = $request->search ?? '';
+        $startDate = $request->start_date ?? '';
+        $endDate = $request->end_date ?? '';
+        $status = $request->status ?? '';
+
+        $query = BarangRuangan::query()->with(['idBarangMasuk' => function($query) {
+            $query->select('id', 'nama', 'merk', 'id_category', 'jumlah', 'satuan', 'harga', 'keterangan', 'id_kondisi', 'tanggal_masuk')
+                  ->with('idCategory', 'idKondisi');
+        }, 'idUser:id,name', 'idRuangan']);
+
+        if ($search) {
+            $query->whereHas('idUser', function($query) use ($search) {
+                $query->where('name', 'like', '%' . $search . '%');
+            });
+        }
+
+        if ($startDate && $endDate) {
+            $query->whereBetween('tanggal', [$startDate, $endDate]);
+        } elseif ($startDate) {
+            $query->whereDate('tanggal', '>=', $startDate);
+        } elseif ($endDate) {
+            $query->whereDate('tanggal', '<=', $endDate);
+        }
+
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+        $barangRuangan = $query->paginate($pagination);
+
+        return response()->json([
+            'success' => true,
+            'data' => $barangRuangan
+        ], 200);
+    }
 }
