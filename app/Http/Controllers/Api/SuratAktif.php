@@ -65,6 +65,7 @@ class SuratAktif extends Controller
             'kelas' => 'required',
             'tahun_ajaran' => 'required',
             'alamat' => 'required',
+            'nisn' => 'required',
         ]);
 
         if ($validate->fails()) {
@@ -87,6 +88,7 @@ class SuratAktif extends Controller
             'kelas' => $request->kelas,
             'tahun_ajaran' => $request->tahun_ajaran,
             'alamat' => $request->alamat,
+            'nisn' => $request->nisn,
         ]);
 
         return response()->json([
@@ -154,6 +156,7 @@ class SuratAktif extends Controller
             'tahun_ajaran' => $request->tahun_ajaran ?? $suratAktif->tahun_ajaran,
             'alamat' => $request->alamat ?? $suratAktif->alamat,
             'status' => $request->status ?? $suratAktif->status,
+            'nisn' => $request->nisn ?? $suratAktif->nisn,
         ]);
 
         // jika status di update menjadi approved maka akan membuat surat aktif menjadi surat aktif

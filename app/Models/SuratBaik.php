@@ -17,6 +17,7 @@ class SuratBaik extends Model
         'tanggal_lahir',
         'jenis_kelamin',
         'alamat',
-        'status'
+        'status',
+        'nisn',
     ];
 }

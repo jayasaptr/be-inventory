@@ -62,6 +62,7 @@ class SuratTugasController extends Controller
             'dasar' => 'required',
             'user_id' => 'required',
             'keterangan' => 'required',
+            'jabatan' => 'required',
         ]);
 
         if ($validate->fails()) {
@@ -77,6 +78,7 @@ class SuratTugasController extends Controller
             'user_id' => $request->user_id,
             'keterangan' => $request->keterangan,
             'status' => "pending",
+            'jabatan' => $request->jabatan,
         ]);
 
         return response()->json([
@@ -155,6 +157,7 @@ class SuratTugasController extends Controller
             'user_id' => $request->user_id ?? $suratTugas->user_id,
             'keterangan' => $request->keterangan ?? $suratTugas->keterangan,
             'status' => $request->status ?? $suratTugas->status,
+            'jabatan' => $request->jabatan ?? $suratTugas->jabatan,
         ]);
 
         if ($request->status == 'approved') {

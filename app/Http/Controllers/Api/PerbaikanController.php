@@ -195,6 +195,7 @@ class PerbaikanController extends Controller
         $startDate = $request->start_date ?? '';
         $endDate = $request->end_date ?? '';
         $status = $request->status ?? '';
+        $idUser = $request->id_user ?? '';
 
         $query = Perbaikan::query()->with(['idBarangMasuk' => function($query) {
             $query->select('id', 'nama', 'merk', 'id_category', 'jumlah', 'satuan', 'harga', 'keterangan', 'id_kondisi', 'tanggal_masuk')
@@ -217,6 +218,10 @@ class PerbaikanController extends Controller
 
         if ($status) {
             $query->where('status', $status);
+        }
+
+        if ($idUser) {
+            $query->where('id_user', $idUser);
         }
 
         $perbaikan = $query->paginate($pagination);

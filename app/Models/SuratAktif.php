@@ -19,5 +19,6 @@ class SuratAktif extends Model
         'tahun_ajaran',
         'alamat',
         'status',
+        'nisn',
     ];
 }

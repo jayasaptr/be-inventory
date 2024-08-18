@@ -64,6 +64,7 @@ class SuratBaikController extends Controller
             'tanggal_lahir' => 'required',
             'jenis_kelamin' => 'required',
             'alamat' => 'required',
+            'nisn' => 'required',
         ]);
 
         
@@ -86,6 +87,7 @@ class SuratBaikController extends Controller
             'jenis_kelamin' => $request->jenis_kelamin,
             'alamat' => $request->alamat,
             'status' => "pending",
+            'nisn' => $request->nisn,
         ]);
 
         return response()->json([
@@ -150,6 +152,7 @@ class SuratBaikController extends Controller
             'jenis_kelamin' => $request->jenis_kelamin ?? $suratBaik->jenis_kelamin,
             'alamat' => $request->alamat ?? $suratBaik->alamat,
             'status' => $request->status ?? $suratBaik->status,
+            'nisn' => $request->nisn ?? $suratBaik->nisn,
         ]);
 
         if ($request->status == 'approved') {

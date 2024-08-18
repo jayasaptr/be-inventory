@@ -237,4 +237,7 @@ Route::group(['middleware' => 'auth:api'], function() {
 
     // delete surat
     Route::delete('/surat/{id}', [\App\Http\Controllers\Api\SuratController::class, 'destroy']);
+
+    // show dashboard
+    Route::get('/dashboard', [\App\Http\Controllers\Api\DashboardController::class, 'index']);
 });
