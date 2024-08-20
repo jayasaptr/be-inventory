@@ -78,6 +78,7 @@ class BarangMasukController extends Controller
         // Validasi data yang diterima
 
         $validation = Validator::make($request->all(), [
+            'code_barang' => 'required',
             'nama' => 'required',
             'merk' => 'required',
             'id_category' => 'required',
@@ -101,6 +102,7 @@ class BarangMasukController extends Controller
         // Membuat data barang masuk baru
 
         $barangMasuk = BarangMasuk::create([
+            'code_barang' => $request->code_barang,
             'nama' => $request->nama,
             'merk' => $request->merk,
             'id_category' => $request->id_category,
@@ -178,6 +180,7 @@ class BarangMasukController extends Controller
         // Mengupdate data barang masuk
 
         $barangMasuk->update([
+            'code_barang' => $request->code_barang ?? $barangMasuk->code_barang,
             'nama' => $request->nama ?? $barangMasuk->nama,
             'merk' => $request->merk ?? $barangMasuk->merk,
             'id_category' => $request->id_category ?? $barangMasuk->id_category,
