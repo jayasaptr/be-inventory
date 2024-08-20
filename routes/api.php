@@ -240,4 +240,34 @@ Route::group(['middleware' => 'auth:api'], function() {
 
     // show dashboard
     Route::get('/dashboard', [\App\Http\Controllers\Api\DashboardController::class, 'index']);
+
+    // asset get 
+    Route::get('/asset', [\App\Http\Controllers\Api\AssetController::class, 'index']);
+
+    // asset store
+    Route::post('/asset', [\App\Http\Controllers\Api\AssetController::class, 'store']);
+
+    // asset show
+    Route::get('/asset/{id}', [\App\Http\Controllers\Api\AssetController::class, 'show']);
+
+    // asset update
+    Route::post('/asset/{id}', [\App\Http\Controllers\Api\AssetController::class, 'update']);
+
+    // asset delete
+    Route::delete('/asset/{id}', [\App\Http\Controllers\Api\AssetController::class, 'destroy']);
+
+    // maintenance asset get
+    Route::get('/maintenance-asset', [\App\Http\Controllers\Api\MaintanceAssetController::class, 'index']);
+
+    // maintenance asset store
+    Route::post('/maintenance-asset', [\App\Http\Controllers\Api\MaintanceAssetController::class, 'store']);
+
+    // maintenance asset show
+    Route::get('/maintenance-asset/{id}', [\App\Http\Controllers\Api\MaintanceAssetController::class, 'show']);
+
+    // maintenance asset update
+    Route::post('/maintenance-asset/{id}', [\App\Http\Controllers\Api\MaintanceAssetController::class, 'update']);
+
+    // maintenance asset delete
+    Route::delete('/maintenance-asset/{id}', [\App\Http\Controllers\Api\MaintanceAssetController::class, 'destroy']);
 });
