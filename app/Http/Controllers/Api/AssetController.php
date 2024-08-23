@@ -49,6 +49,7 @@ class AssetController extends Controller
             'price' => 'required', 
             'quantity' => 'required',
             'kondisi' => 'required',
+            'satuan' => 'required',
         ]);
 
         if ($validate->fails()) {

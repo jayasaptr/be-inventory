@@ -272,4 +272,14 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::delete('/maintenance-asset/{id}', [\App\Http\Controllers\Api\MaintanceAssetController::class, 'destroy']);
 
     Route::get('/barang-asset', [\App\Http\Controllers\Api\BarangController::class, 'barangDanAsseet']);
+
+    Route::get('/asset-keluar', [\App\Http\Controllers\Api\AssetKeluarController::class, 'index']);
+
+    Route::post('/asset-keluar', [\App\Http\Controllers\Api\AssetKeluarController::class, 'store']);
+
+    Route::get('/asset-keluar/{id}', [\App\Http\Controllers\Api\AssetKeluarController::class, 'show']);
+
+    Route::post('/asset-keluar/{id}', [\App\Http\Controllers\Api\AssetKeluarController::class, 'update']);
+
+    Route::delete('/asset-keluar/{id}', [\App\Http\Controllers\Api\AssetKeluarController::class, 'destroy']);
 });

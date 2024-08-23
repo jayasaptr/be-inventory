@@ -115,7 +115,7 @@ class BarangController extends Controller
             return [
                 'nama' => $item->nama ?? $item->name,
                 'tanggal_pembelian' => $item->tanggal_masuk ?? $item->purchase_date,
-                'jumlah' => $item->jumlah ?? $item->quantity,
+                'jumlah' => $item->stock ?? $item->quantity,
                 'category' => $item->idCategory->name ?? $item->type,
                 'kondisi' => $item->idKondisi->nama ?? $item->kondisi,
                 'kode' => $item->code_barang ?? $item->code,
