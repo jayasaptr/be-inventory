@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Asset;
 use App\Models\BarangMasuk;
 use App\Models\BarangRuangan;
 use App\Models\BarangKeluar;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use TCPDF; // Add this line to import the TCPDF class
 
 class BarangController extends Controller
@@ -65,99 +67,73 @@ class BarangController extends Controller
             return $item instanceof BarangMasuk;
         });
 
-        if ($print) {
-            $pdf = new TCPDF(); // Use TCPDF class directly
-
-            // Set default monospaced font
-            $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-
-            // Set margins
-            $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
-            $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
-            $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
-
-            // Set auto page breaks
-            $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
-
-            // Set image scale factor
-            $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-
-            // Add a page
-            $pdf->AddPage();
-
-            // Set font
-            $pdf->SetFont('helvetica', '', 12);
-
-            // Set the header
-            $html = '<table border="1" cellpadding="4">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nama Barang</th>
-                                <th>Merk</th>
-                                <th>Kategori</th>
-                                <th>Kondisi</th>
-                                <th>Jumlah</th>
-                                <th>Total Harga</th>
-                                <th>Tanggal Masuk</th>
-                                <th>Total Barang Tersedia</th>
-                                <th>Total Barang Ruangan</th>
-                                <th>Total Barang Keluar</th>
-                            </tr>
-                        </thead>
-                        <tbody>';
-
-            // Fill data
-            foreach ($barang as $item) {
-                $html .= '<tr>
-                            <td>' . $item->id . '</td>
-                            <td>' . $item->nama . '</td>
-                            <td>' . $item->merk . '</td>
-                            <td>' . $item->idCategory->name . '</td>
-                            <td>' . $item->idKondisi->nama . '</td>
-                            <td>' . $item->jumlah . '</td>
-                            <td>' . $item->harga * $item->jumlah . '</td>
-                            <td>' . $item->tanggal_masuk . '</td>
-                            <td>' . $item->total_barang_tersedia . '</td>
-                            <td>' . $item->total_barang_ruangan . '</td>
-                            <td>' . $item->total_barang_keluar . '</td>
-                          </tr>';
-            }
-
-            $html .= '</tbody></table>';
-
-            // Print text using writeHTMLCell()
-            $pdf->writeHTML($html, true, false, true, false, '');
-
-            // Add signature at the bottom of the page
-            $pdf->SetY(-80); // Position at 50 mm from bottom
-            $signatureHtml = '<table border="0" cellpadding="4">
-                                <tr>
-                                    <td></td>
-                                    <td style="text-align: center;">
-                                        Kepala Sekolah<br><br><br><br>
-                                        <u>Nama Kepala Sekolah</u><br>
-                                        NIP. 123456789
-                                    </td>
-                                </tr>
-                              </table>';
-            $pdf->writeHTML($signatureHtml, true, false, true, false, '');
-
-            // Close and output PDF document
-            $filename = 'report_barang.pdf';
-            $pdf->Output(public_path($filename), 'F');
-
-            // Return the URL as a response
-            return response()->json([
-                'success' => true,
-                'url' => url($filename)
-            ], 200);
-        }
-
         return response()->json([
             'success' => true,
             'message' => 'List data barang',
             'data' => $barang,
+        ], 200);
+    }
+
+    public function barangDanAsseet(Request $request)
+    {
+        $pagination = $request->pagination ?? 100;
+        $search = $request->search ?? '';
+        $startDate = $request->start_date ?? '';
+        $endDate = $request->end_date ?? '';
+        $category = $request->category ?? '';
+
+        // Get barang data
+        $barang = BarangMasuk::when($search, function($query) use ($search) {
+            $query->where('nama', 'like', '%' . $search . '%');
+        })->when($startDate, function($query) use ($startDate) {
+            $query->where('tanggal_masuk', '>=', $startDate);
+        })->when($endDate, function($query) use ($endDate) {
+            $query->where('tanggal_masuk', '<=', $endDate);
+        })->when($category, function($query) use ($category) {
+            $query->whereHas('idCategory', function($query) use ($category) {
+                $query->where('name', 'like', '%' . $category . '%');
+            });
+        })->with('idKondisi:id,nama', 'idCategory:id,name')->get();
+          
+
+        // Get asset data
+        $assets = Asset::when($search, function($query) use ($search) {
+            $query->where('name', 'like', '%' . $search . '%');
+        })->when($startDate, function($query) use ($startDate) {
+            $query->where('purchase_date', '>=', $startDate);
+        })->when($endDate, function($query) use ($endDate) {
+            $query->where('purchase_date', '<=', $endDate);
+        })->when($category, function($query) use ($category) {
+            $query->where('type', 'like', '%' . $category . '%');
+        })->get();
+
+        // Merge the collections
+        $data = $barang->concat($assets);
+
+        // Map the data to include only the required fields
+        $data = $data->map(function($item) {
+            return [
+                'nama' => $item->nama ?? $item->name,
+                'tanggal_pembelian' => $item->tanggal_masuk ?? $item->purchase_date,
+                'jumlah' => $item->jumlah ?? $item->quantity,
+                'category' => $item->idCategory->name ?? $item->type,
+                'kondisi' => $item->idKondisi->nama ?? $item->kondisi,
+                'kode' => $item->code_barang ?? $item->code,
+            ];
+        });
+
+        // Paginate the merged data
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $perPage = $pagination;
+        $currentItems = $data->slice(($currentPage - 1) * $perPage, $perPage)->values();
+        $paginatedData = new LengthAwarePaginator($currentItems, $data->count(), $perPage, $currentPage, [
+            'path' => LengthAwarePaginator::resolveCurrentPath(),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'List data asset dan barang',
+            'data' => $paginatedData,
         ], 200);
     }
 }

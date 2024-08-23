@@ -270,4 +270,6 @@ Route::group(['middleware' => 'auth:api'], function() {
 
     // maintenance asset delete
     Route::delete('/maintenance-asset/{id}', [\App\Http\Controllers\Api\MaintanceAssetController::class, 'destroy']);
+
+    Route::get('/barang-asset', [\App\Http\Controllers\Api\BarangController::class, 'barangDanAsseet']);
 });
