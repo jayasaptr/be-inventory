@@ -91,6 +91,7 @@ class BarangMasukController extends Controller
             'id_kondisi' => $request->id_kondisi,
             'tanggal_masuk' => $request->tanggal_masuk,
             'stock' => $request->jumlah,
+            'status' => $request->status ?? 'pending',
         ]);
 
         // Mengembalikan response sukses
@@ -169,6 +170,7 @@ class BarangMasukController extends Controller
             'id_kondisi' => $request->id_kondisi ?? $barangMasuk->id_kondisi,
             'tanggal_masuk' => $request->tanggal_masuk ?? $barangMasuk->tanggal_masuk,
             'stock' => $request->jumlah ?? $barangMasuk->stock,
+            'status' => $request->status ?? $barangMasuk->status,
         ]);
 
         // Mengembalikan response sukses
