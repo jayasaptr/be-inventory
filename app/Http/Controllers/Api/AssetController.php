@@ -40,21 +40,7 @@ class AssetController extends Controller
      */
     public function store(Request $request)
     {
-        $validate = Validator::make($request->all(), [
-            'code' => 'required',
-            'name' => 'required', 
-            'description' => 'required', 
-            'type' => 'required',
-            'purchase_date' => 'required', 
-            'price' => 'required', 
-            'quantity' => 'required',
-            'kondisi' => 'required',
-            'satuan' => 'required',
-        ]);
-
-        if ($validate->fails()) {
-            return response()->json($validate->errors(), 442);
-        }
+       
 
         $asset = Asset::create($request->all());
 

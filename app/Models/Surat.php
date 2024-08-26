@@ -15,5 +15,11 @@ class Surat extends Model
         'keterangan',
         'jenis_surat',
         'tanggal_surat',
+        'image',
     ];
+
+    public function getImageAttribute($value)
+    {
+        return url('storage/images/' . $value);
+    }
 }

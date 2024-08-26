@@ -52,6 +52,7 @@ class SuratController extends Controller
             'keterangan' => 'required',
             'jenis_surat' => 'required',
             'tanggal_surat' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         if ($validate->fails()) {
@@ -62,7 +63,16 @@ class SuratController extends Controller
             ], 400);
         }
 
-        $surat = Surat::create($request->all());
+        $data = $request->all();
+
+        // upload image
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $image->storeAs('public/images', $image->hashName());
+            $data['image'] = $image->hashName();
+        }
+
+        $surat = Surat::create($data);
 
         return response()->json([
             'success' => true,
@@ -118,7 +128,16 @@ class SuratController extends Controller
             ], 404);
         }
 
-        $surat->update($request->all());
+        $data = $request->all();
+
+        // upload image
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $image->storeAs('public/images', $image->hashName());
+            $data['image'] = $image->hashName();
+        }
+
+        $surat->update($data);
 
         return response()->json([
             'success' => true,

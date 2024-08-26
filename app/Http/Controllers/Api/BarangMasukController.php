@@ -77,28 +77,6 @@ class BarangMasukController extends Controller
     {
         // Validasi data yang diterima
 
-        $validation = Validator::make($request->all(), [
-            'code_barang' => 'required',
-            'nama' => 'required',
-            'merk' => 'required',
-            'id_category' => 'required',
-            'jumlah' => 'required',
-            'satuan' => 'required',
-            'harga' => 'required',
-            'keterangan' => 'required',
-            'id_kondisi' => 'required',
-            'tanggal_masuk' => 'required',
-        ]);
-
-        // Jika validasi gagal, kirim response error
-
-        if ($validation->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $validation->errors()
-            ], 422);
-        }
-
         // Membuat data barang masuk baru
 
         $barangMasuk = BarangMasuk::create([

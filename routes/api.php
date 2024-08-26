@@ -282,4 +282,56 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('/asset-keluar/{id}', [\App\Http\Controllers\Api\AssetKeluarController::class, 'update']);
 
     Route::delete('/asset-keluar/{id}', [\App\Http\Controllers\Api\AssetKeluarController::class, 'destroy']);
+
+    Route::get('/asset-masuk', [\App\Http\Controllers\Api\AssetMasukController::class, 'index']);
+
+    Route::post('/asset-masuk', [\App\Http\Controllers\Api\AssetMasukController::class, 'store']);
+
+    Route::get('/asset-masuk/{id}', [\App\Http\Controllers\Api\AssetMasukController::class, 'show']);
+
+    Route::post('/asset-masuk/{id}', [\App\Http\Controllers\Api\AssetMasukController::class, 'update']);
+
+    Route::delete('/asset-masuk/{id}', [\App\Http\Controllers\Api\AssetMasukController::class, 'destroy']);
+
+    Route::get('/new-barang-masuk', [\App\Http\Controllers\Api\BarangMasukModelController::class, 'index']);
+
+    Route::post('/new-barang-masuk', [\App\Http\Controllers\Api\BarangMasukModelController::class, 'store']);
+
+    Route::get('/new-barang-masuk/{id}', [\App\Http\Controllers\Api\BarangMasukModelController::class, 'show']);
+
+    Route::post('/new-barang-masuk/{id}', [\App\Http\Controllers\Api\BarangMasukModelController::class, 'update']);
+
+    Route::delete('/new-barang-masuk/{id}', [\App\Http\Controllers\Api\BarangMasukModelController::class, 'destroy']);
+
+    Route::get('/asset-barang', [\App\Http\Controllers\Api\AssetBarangController::class, 'index']);
+
+    Route::get('/asset-barang-keluar', [\App\Http\Controllers\Api\AssetBarangKeluarController::class, 'index']);
+
+    Route::post('/asset-barang-keluar', [\App\Http\Controllers\Api\AssetBarangKeluarController::class, 'store']);
+
+    Route::get('/asset-barang-keluar/{id}', [\App\Http\Controllers\Api\AssetBarangKeluarController::class, 'show']);
+
+    Route::post('/asset-barang-keluar/{id}', [\App\Http\Controllers\Api\AssetBarangKeluarController::class, 'update']);
+
+    Route::delete('/asset-barang-keluar/{id}', [\App\Http\Controllers\Api\AssetBarangKeluarController::class, 'destroy']);
+
+    Route::get('/new-perbaikan', [\App\Http\Controllers\Api\NewPerbaikanController::class, 'index']);
+
+    Route::post('/new-perbaikan', [\App\Http\Controllers\Api\NewPerbaikanController::class, 'store']);
+
+    Route::get('/new-perbaikan/{id}', [\App\Http\Controllers\Api\NewPerbaikanController::class, 'show']);
+
+    Route::post('/new-perbaikan/{id}', [\App\Http\Controllers\Api\NewPerbaikanController::class, 'update']);
+
+    Route::delete('/new-perbaikan/{id}', [\App\Http\Controllers\Api\NewPerbaikanController::class, 'destroy']);
+
+    Route::get('/new-barang-ruangan', [\App\Http\Controllers\Api\NewBarangRuanganController::class, 'index']);
+
+    Route::post('/new-barang-ruangan', [\App\Http\Controllers\Api\NewBarangRuanganController::class, 'store']);
+
+    Route::get('/new-barang-ruangan/{id}', [\App\Http\Controllers\Api\NewBarangRuanganController::class, 'show']);
+
+    Route::post('/new-barang-ruangan/{id}', [\App\Http\Controllers\Api\NewBarangRuanganController::class, 'update']);
+
+    Route::delete('/new-barang-ruangan/{id}', [\App\Http\Controllers\Api\NewBarangRuanganController::class, 'destroy']);
 });
