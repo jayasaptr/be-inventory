@@ -334,4 +334,13 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('/new-barang-ruangan/{id}', [\App\Http\Controllers\Api\NewBarangRuanganController::class, 'update']);
 
     Route::delete('/new-barang-ruangan/{id}', [\App\Http\Controllers\Api\NewBarangRuanganController::class, 'destroy']);
+
+
+    Route::get('/siswa', [\App\Http\Controllers\Api\SiswaController::class, 'index']);
+
+    Route::post('/siswa', [\App\Http\Controllers\Api\SiswaController::class, 'store']);
+
+    Route::post('/siswa/{id}', [\App\Http\Controllers\Api\SiswaController::class, 'update']);
+
+    Route::delete('/siswa/{id}', [\App\Http\Controllers\Api\SiswaController::class, 'destroy']);
 });

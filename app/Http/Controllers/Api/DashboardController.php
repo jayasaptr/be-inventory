@@ -9,12 +9,11 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $totalBarangMasuk = \App\Models\BarangMasuk::sum('jumlah');
-        $totalBarangKeluar = \App\Models\BarangKeluar::sum('jumlah');
+        $totalBarangMasuk = \App\Models\BarangMasukModel::sum('quantity');
+        $totalBarangKeluar = \App\Models\AssetBarangKeluar::where('category', 'like', '%barang%')->sum('jumlah');
         $totalSuratMasuk = \App\Models\Surat::where('jenis_surat', 'surat masuk')->count();
         $totalSuratKeluar = \App\Models\Surat::where('jenis_surat', 'surat keluar')->count();
-        $totalBiayaPerbaikan = \App\Models\Perbaikan::sum('biaya');
-
+        $totalBiayaPerbaikan = \App\Models\NewPerbaikanBarang::where('status', 'disetuji')->sum('biaya');
         return response()->json([
             'success' => true,
             'message' => 'Dashboard data',
