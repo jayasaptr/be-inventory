@@ -16,7 +16,8 @@ class SuratTugas extends Model
         'user_id',
         'keterangan',
         'status',
-        'jabatan'
+        'jabatan',
+        'biaya_akomodasi'
     ];
 
     public function userId()

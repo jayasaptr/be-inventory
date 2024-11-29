@@ -67,20 +67,40 @@ class AssetBarangKeluarController extends Controller
     {
         $data = $request->all();
 
-        $assetBarangKeluar = AssetBarangKeluar::create($data);
+        // Cari barang berdasarkan kode
+        $assetBarang = AssetBarangModel::where('kode', $data['kode'])->first();
 
-        $assetBarang = AssetBarangModel::where('kode', $assetBarangKeluar->kode)->first();
         if ($assetBarang) {
+            // Cek apakah jumlah barang mencukupi
+            if ($assetBarang->jumlah < $data['jumlah']) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Jumlah barang tidak mencukupi',
+                    'data' => null
+                ], 400);
+            }
+
+            // Jika mencukupi, simpan data ke AssetBarangKeluar
+            $assetBarangKeluar = AssetBarangKeluar::create($data);
+
+            // Kurangi jumlah barang di AssetBarang
             $assetBarang->jumlah -= $assetBarangKeluar->jumlah;
             $assetBarang->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Asset barang keluar berhasil ditambahkan',
+                'data' => $assetBarangKeluar
+            ], 201);
         }
 
         return response()->json([
-            'success' => true,
-            'message' => 'Asset barang keluar berhasil ditambahkan',
-            'data' => $assetBarangKeluar
-        ], 201);
+            'success' => false,
+            'message' => 'Barang tidak ditemukan',
+            'data' => null
+        ], 404); // Status 404 untuk barang tidak ditemukan
     }
+
 
     /**
      * Display the specified resource.
@@ -88,7 +108,7 @@ class AssetBarangKeluarController extends Controller
     public function show(string $id)
     {
         $data = AssetBarangKeluar::find($id);
-        
+
 
         return response()->json([
             'success' => true,

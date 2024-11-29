@@ -63,6 +63,7 @@ class SuratTugasController extends Controller
             'user_id' => 'required',
             'keterangan' => 'required',
             'jabatan' => 'required',
+            'biaya_akomodasi' => 'required',
         ]);
 
         if ($validate->fails()) {
@@ -79,6 +80,7 @@ class SuratTugasController extends Controller
             'keterangan' => $request->keterangan,
             'status' => "pending",
             'jabatan' => $request->jabatan,
+            'biaya_akomodasi' => $request->biaya_akomodasi,
         ]);
 
         return response()->json([
@@ -86,7 +88,6 @@ class SuratTugasController extends Controller
             'message' => 'Surat tugas berhasil dibuat',
             'data' => $suratTugas,
         ], 201);
-
     }
 
     /**
@@ -158,6 +159,7 @@ class SuratTugasController extends Controller
             'keterangan' => $request->keterangan ?? $suratTugas->keterangan,
             'status' => $request->status ?? $suratTugas->status,
             'jabatan' => $request->jabatan ?? $suratTugas->jabatan,
+            'biaya_akomodasi' => $request->biaya_akomodasi ?? $suratTugas->biaya_akomodasi
         ]);
 
         if ($request->status == 'approved') {
@@ -168,7 +170,7 @@ class SuratTugasController extends Controller
                 'jenis_surat' => 'surat keluar',
                 'tanggal_surat' => date('Y-m-d'),
             ]);
-        } 
+        }
 
         return response()->json([
             'success' => true,
